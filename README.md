@@ -3,7 +3,7 @@
 This repository is a fork of [gsma-labs/evals](https://github.com/gsma-labs/evals)
 (MIT licensed), used for the MSc thesis *"Domain-Adapted SLM-as-Judge for
 Specialised Domains: A Human-Grounded Evaluation in Telecommunications."*
-Everything from the `---` divider below is GSMA's original, unmodified
+Everything from the below is GSMA's original, unmodified
 documentation.
 
 ## What's added
@@ -47,6 +47,28 @@ inspect eval src/evals/teleqna/teleqna_mult_judge.py \
 inspect eval src/evals/teleqna/teleqna_mult_judge.py \
   -T judge_models="['openrouter/openai/gpt-5.5', 'hf/./models/tslam-4B']"
 ```
+
+## About
+
+This work benchmarks LLM-as-judge and SLM-as-judge grading reliability against
+a 7-rater human-validation study across two telecom QA/troubleshooting
+datasets (TeleQNA, TeleLogs), comparing a locally-hosted, domain-adapted SLM
+judge (TSLAM-4B) against frontier LLM judges (GPT-5.5, Gemini-3.1-Pro,
+Claude-Opus-4.8) and a general-purpose SLM baseline (Phi-4-Mini-Instruct). See
+the accompanying thesis for the full methodology, results, and discussion of
+judge-panel reliability, cost, and latency trade-offs.
+
+For the base evaluation framework, see GSMA's own
+[Getting Started](docs/getting-started.md) and
+[Running Evaluations](docs/running-evaluations.md) guides below.
+
+## License
+
+MIT — inherited from the upstream [gsma-labs/evals](https://github.com/gsma-labs/evals)
+repository (see `LICENSE`). The new files listed above are released under the
+same license.
+
+---------------------------------
 
 
 <p align="center">
