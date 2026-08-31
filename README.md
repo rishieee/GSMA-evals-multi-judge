@@ -1,17 +1,14 @@
 # Multi-Judge Panel Extension for GSMA Open Telco Evals
 
 This repository is a fork of [gsma-labs/evals](https://github.com/gsma-labs/evals)
-(MIT licensed), used for the MSc disertation *"Domain-Adapted SLM-as-Judge for
+(MIT licensed), used for the MSc dissertation *"Domain-Adapted SLM-as-Judge for
 Specialised Domains: A Human-Grounded Evaluation in Telecommunications."*
-Everything from the below is GSMA's original, unmodified
+Everything below is GSMA's original, unmodified
 documentation.
 
 ## What's added
 
-A multi-judge panel scoring layer for TeleQNA and TeleLogs: simultaneous grading by
-multiple LLM judges and local SLM judges (TSLAM-4B, Phi-4-Mini-Instruct), each
-producing a binary correctness grade plus a 0–10 reasoning-quality score. No
-existing GSMA file is modified.
+A multi-judge panel scoring layer for TeleQNA and TeleLogs: simultaneous grading by multiple LLM judges and local SLM judges (TSLAM-4B, Phi-4-Mini-Instruct), each producing a binary correctness grade plus a 0–10 reasoning-quality score. No existing GSMA file is modified.
 
 ```
 evals/
