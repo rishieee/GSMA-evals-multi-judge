@@ -1,7 +1,7 @@
 # Multi-Judge Panel Extension for GSMA Open Telco Evals
 
 This repository is a fork of [gsma-labs/evals](https://github.com/gsma-labs/evals)
-(MIT licensed), used for the MSc thesis *"Evaluation of a Domain-Adapted SLM-as-Judge for
+(MIT licensed), used for the MSc dissertation *"Evaluation of a Domain-Adapted SLM-as-Judge for
 Specialised Domains: A Human-Grounded Study in Telecommunications."*
 Everything below License  is GSMA's original, unmodified
 documentation.
