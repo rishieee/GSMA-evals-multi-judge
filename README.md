@@ -8,8 +8,8 @@ documentation.
 
 ## What's added
 
-A multi-judge panel scoring layer for TeleQNA, TeleLogs (5G-Faults), and
-TeleInter: simultaneous grading by multiple LLM judges and local SLM judges
+A multi-judge panel scoring layer for TeleQNA-ORAN-FreeText,5G-Faults-FreeText, and
+TeleInter-FreeText: simultaneous grading by multiple LLM judges and local SLM judges
 (TSLAM-4B, Phi-4-Mini-Instruct), each producing a binary correctness grade
 plus a 0–10 reasoning-quality score. Everything new lives in its own
 `judge_panels/` directory — no existing GSMA file or folder is touched.
