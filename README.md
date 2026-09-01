@@ -1,49 +1,77 @@
 # Multi-Judge Panel Extension for GSMA Open Telco Evals
 
 This repository is a fork of [gsma-labs/evals](https://github.com/gsma-labs/evals)
-(MIT licensed), used for the MSc dissertation *"Domain-Adapted SLM-as-Judge for
+(MIT licensed), used for the MSc thesis *"Domain-Adapted SLM-as-Judge for
 Specialised Domains: A Human-Grounded Evaluation in Telecommunications."*
-Everything below is GSMA's original, unmodified
+Everything from the `---` divider below is GSMA's original, unmodified
 documentation.
 
 ## What's added
 
-A multi-judge panel scoring layer for TeleQNA and TeleLogs: simultaneous grading by multiple LLM judges and local SLM judges (TSLAM-4B, Phi-4-Mini-Instruct), each producing a binary correctness grade plus a 0–10 reasoning-quality score. No existing GSMA file is modified.
+A multi-judge panel scoring layer for TeleQNA, TeleLogs (5G-Faults), and
+TeleInter: simultaneous grading by multiple LLM judges and local SLM judges
+(TSLAM-4B, Phi-4-Mini-Instruct), each producing a binary correctness grade
+plus a 0–10 reasoning-quality score. Everything new lives in its own
+`judge_panels/` directory — no existing GSMA file or folder is touched.
 
 ```
 evals/
-├── src/evals/teleqna/
-│   └── teleqna_mult_judge.py    # new: TeleQNA multi-judge scorer
-├── src/evals/telelogs/
-│   ├── telelogs_judge.py        # new: TeleLogs multi-judge scorer
-│   └── teleinter_judge.py       # new: TeleInter multi-judge scorer
-└── .env.example                 # new: required environment variables
+├── src/evals/judge_panels/         # new — all additions live here
+│   ├── teleqna_multi_judge.py      # TeleQNA multi-judge scorer
+│   ├── fiveG_faults_multi_judge.py # TeleLogs (5G-Faults) multi-judge scorer
+│   └── teleinter_multi_judge.py    # TeleInter multi-judge scorer
+└── .env.example                    # new: required environment variables
 ```
 
 ## Setup
 
-Copy `.env.example` to `.env` and fill in `OPENROUTER_API_KEY`. The local SLM
-judge (TSLAM-4B) reads its checkpoint path from `TSLAM_4B_MODEL_PATH`; without
-it, the default falls back to a placeholder path and will fail to load unless
+Follow GSMA's own [Getting Started](docs/getting-started.md) guide to create a
+`.env` file with `OPENROUTER_API_KEY`. Additionally, the local SLM judge
+(TSLAM-4B) reads its checkpoint path from `TSLAM_4B_MODEL_PATH`; without it,
+the default falls back to a placeholder path and will fail to load unless
 overridden via `-T judge_models=[...]`.
 
 ## Running these evals
 
 ```
-inspect eval src/evals/teleqna/teleqna_mult_judge.py
-inspect eval src/evals/telelogs/telelogs_judge.py
-inspect eval src/evals/telelogs/teleinter_judge.py
+inspect eval src/evals/judge_panels/teleqna_multi_judge.py
+inspect eval src/evals/judge_panels/fiveG_faults_multi_judge.py
+inspect eval src/evals/judge_panels/teleinter_multi_judge.py
 ```
 
 Override the judge panel via `-T judge_models=...` (either form works):
 
 ```
-inspect eval src/evals/teleqna/teleqna_mult_judge.py \
+inspect eval src/evals/judge_panels/teleqna_multi_judge.py \
   -T judge_models="openrouter/openai/gpt-5.5,openrouter/google/gemini-3.1-pro-preview"
 
-inspect eval src/evals/teleqna/teleqna_mult_judge.py \
+inspect eval src/evals/judge_panels/teleqna_multi_judge.py \
   -T judge_models="['openrouter/openai/gpt-5.5', 'hf/./models/tslam-4B']"
 ```
+
+## Judge configuration
+
+Each judge is called with `max_tokens=2048`, `temperature=0.1`, `verbosity="low"`.
+
+- **Reasoning effort:** judges matching `gemini`, `o1`, `o3`, or `claude-3-7`/`claude-3.7`
+  in their model id are called with `reasoning_effort="low"`; all others use `"none"`.
+  The NVIDIA `openai-api/` endpoint rejects the `reasoning_effort` parameter outright,
+  so it is omitted entirely for that provider (`teleqna_multi_judge.py` and
+  `fiveG_faults_multi_judge.py` only — see below).
+- **Malformed-output retries:** if a judge's response is missing a parseable `GRADE`
+  or `reasoning_quality` field, the scorer re-prompts the same judge up to 3 attempts
+  total, appending a corrective instruction on retries 2 and 3. The final attempt's
+  output is used regardless of whether it parsed successfully; a still-unparsed grade
+  defaults to `Incorrect`.
+- **Transient-error retries:** independently of the malformed-output retry above,
+  `max_retries=3` bounds `inspect_ai`'s own retry-on-transient-error behavior (timeouts,
+  connection errors), so a persistently unreachable judge fails after 3 attempts
+  instead of retrying indefinitely.
+- **Request timeout:** `teleqna_multi_judge.py` and `fiveG_faults_multi_judge.py` set
+  `client_timeout=30` (seconds) specifically for `openai-api/` judges, bounding the
+  underlying HTTP request so an unresponsive endpoint cannot stall the run. This is
+  **not** present in `teleinter_multi_judge.py`, which does not target the NVIDIA
+  endpoint by default and uses a simpler, unconditional `reasoning_effort` config.
 
 ## About
 
