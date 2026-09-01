@@ -16,12 +16,12 @@ plus a 0–10 reasoning-quality score. Everything new lives in its own
 
 ```
 evals/
-├── src/evals/judge_panels/         # new — all additions live here
-│   ├── teleqna_multi_judge.py      # TeleQNA multi-judge scorer
-│   ├── fiveG_faults_multi_judge.py # TeleLogs (5G-Faults) multi-judge scorer
-│   └── teleinter_multi_judge.py    # TeleInter multi-judge scorer
-└── .env.example                    # new: required environment variables
+└── src/evals/judge_panels/         # new — all additions live here
+    ├── teleqna_multi_judge.py      # TeleQNA multi-judge scorer
+    ├── fiveG_faults_multi_judge.py # TeleLogs (5G-Faults) multi-judge scorer
+    └── teleinter_multi_judge.py    # TeleInter multi-judge scorer
 ```
+
 
 ## Setup
 
@@ -53,25 +53,7 @@ inspect eval src/evals/judge_panels/teleqna_multi_judge.py \
 
 Each judge is called with `max_tokens=2048`, `temperature=0.1`, `verbosity="low"`.
 
-- **Reasoning effort:** judges matching `gemini`, `o1`, `o3`, or `claude-3-7`/`claude-3.7`
-  in their model id are called with `reasoning_effort="low"`; all others use `"none"`.
-  The NVIDIA `openai-api/` endpoint rejects the `reasoning_effort` parameter outright,
-  so it is omitted entirely for that provider (`teleqna_multi_judge.py` and
-  `fiveG_faults_multi_judge.py` only — see below).
-- **Malformed-output retries:** if a judge's response is missing a parseable `GRADE`
-  or `reasoning_quality` field, the scorer re-prompts the same judge up to 3 attempts
-  total, appending a corrective instruction on retries 2 and 3. The final attempt's
-  output is used regardless of whether it parsed successfully; a still-unparsed grade
-  defaults to `Incorrect`.
-- **Transient-error retries:** independently of the malformed-output retry above,
-  `max_retries=3` bounds `inspect_ai`'s own retry-on-transient-error behavior (timeouts,
-  connection errors), so a persistently unreachable judge fails after 3 attempts
-  instead of retrying indefinitely.
-- **Request timeout:** `teleqna_multi_judge.py` and `fiveG_faults_multi_judge.py` set
-  `client_timeout=30` (seconds) specifically for `openai-api/` judges, bounding the
-  underlying HTTP request so an unresponsive endpoint cannot stall the run. This is
-  **not** present in `teleinter_multi_judge.py`, which does not target the NVIDIA
-  endpoint by default and uses a simpler, unconditional `reasoning_effort` config.
+- **Reasoning effort:**  `reasoning_effort="low"`
 
 ## About
 
