@@ -2,9 +2,7 @@
 
 This repository is a fork of [gsma-labs/evals](https://github.com/gsma-labs/evals)
 (MIT licensed), used for the MSc dissertation *"Evaluation of a Domain-Adapted SLM-as-Judge for
-Specialised Domains: A Human-Grounded Study in Telecommunications."*
-Everything below License  is GSMA's original, unmodified
-documentation.
+Specialised Domains: A Human-Grounded Study in Telecommunications."* The modifications were done on top of the existing implementation.
 
 ## What's added
 
