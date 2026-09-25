@@ -65,6 +65,8 @@ Claude-Opus-4.8) and a general-purpose SLM baseline (Phi-4-Mini-Instruct). See
 the accompanying thesis for the full methodology, results, and discussion of
 judge-panel reliability, cost, and latency trade-offs.
 
+GenAI has been used for unit testing, framework-level logic testing and modifications, and ensuring framework consistency. It was also used to debug environment-related issues.
+
 For the base evaluation framework, see GSMA's own
 [Getting Started](docs/getting-started.md) and
 [Running Evaluations](docs/running-evaluations.md) guides below.
